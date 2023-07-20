@@ -19,12 +19,16 @@ __enhancd::history::exists()
 
 __enhancd::history::list()
 {
+  if ${ENHANCD_HISTORY_ZOXIDE_BACKEND}; then
+    zoxide query --list --exclude "${PWD}" "${@}"
+  else
   __enhancd::history::open \
     | __enhancd::filter::reverse \
     | __enhancd::filter::unique \
     | __enhancd::filter::exists \
     | __enhancd::filter::fuzzy "${@}" \
     | __enhancd::filter::exclude "${PWD}"
+  fi
 }
 
 __enhancd::history::update()

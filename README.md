@@ -413,6 +413,14 @@ $ fisher install b4b4r07/enhancd
 ## Configuration
 
 <details>
+<summary><strong><code>ENHANCD_HISTORY_ZOXIDE_BACKEND</code></strong></summary>
+
+Using [zoxide](https://github.com/ajeetdsouza/zoxide) as history storage engine
+and fuzzy search engine.
+
+abandon `$ENHANCD_DIR/.enhancd.log` and local `mru` in shell
+
+<details>
 <summary><strong><code>ENHANCD_DIR</code></strong></summary>
 
 A directory to have `enhancd.log` and `config.ltsv`. It defaults to `~/.enhancd`.

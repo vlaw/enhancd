@@ -151,11 +151,15 @@ __enhancd::cd::before()
 
 __enhancd::cd::after()
 {
-  local list
-  list="$(__enhancd::history::update)"
+  if ${ENHANCD_HISTORY_ZOXIDE_BACKEND}; then
+    zoxide add "$(__enhancd::filepath::current_dir)"
+  else
+    local list
+    list="$(__enhancd::history::update)"
 
-  if [[ -n ${list} ]]; then
-    echo "${list}" >| "${ENHANCD_DIR}/enhancd.log"
+    if [[ -n ${list} ]]; then
+      echo "${list}" >| "${ENHANCD_DIR}/enhancd.log"
+    fi
   fi
 
   if [[ -n ${ENHANCD_HOOK_AFTER_CD} ]]; then
@@ -166,6 +170,6 @@ __enhancd::cd::after()
 __enhancd::cd::ready()
 {
   __enhancd::helper::parse_filter_string "${ENHANCD_FILTER}" \
-  &>/dev/null && [[ -s ${ENHANCD_DIR}/enhancd.log ]]
+  &>/dev/null && [[ -s ${ENHANCD_DIR}/enhancd.log || ${ENHANCD_HISTORY_ZOXIDE_BACKEND} ]]
   return ${?}
 }

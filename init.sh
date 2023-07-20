@@ -19,6 +19,8 @@ export ENHANCD_COMPLETION_KEYBIND="${ENHANCD_COMPLETION_KEYBIND:-^I}"
 export ENHANCD_COMPLETION_BEHAVIOR="${ENHANCD_COMPLETION_BEHAVIOR:-default}"
 export ENHANCD_USE_ABBREV="${ENHANCD_USE_ABBREV:-false}"
 
+export ENHANCD_HISTORY_ZOXIDE_BACKEND="${ENHANCD_HISTORY_ZOXIDE_BACKEND:-false}"
+
 if [[ -n ${BASH_VERSION} ]]; then
   # BASH
   ENHANCD_ROOT="$(builtin cd "$(command dirname "${BASH_SOURCE}")" && pwd)"
@@ -29,6 +31,14 @@ elif [[ -n ${ZSH_VERSION} ]]; then
 fi
 
 export _ENHANCD_VERSION="$(command cat "${ENHANCD_ROOT}/VERSION" 2>/dev/null)"
+
+# 增加版本标识
+# 形如: Version: 2.5.1 (zoxide 0.9.2)
+if ${ENHANCD_HISTORY_ZOXIDE_BACKEND}; then
+  if [[ ! -x "$(command -v zoxide > /dev/null)" ]]; then
+    export _ENHANCD_VERSION="$_ENHANCD_VERSION ($(zoxide --version))"
+  fi
+fi
 
 # core files
 for src in ${ENHANCD_ROOT}/src/*.sh
@@ -48,7 +58,7 @@ fi
 if [[ ! -d ${ENHANCD_DIR} ]]; then
   mkdir -p "${ENHANCD_DIR}"
 fi
-if [[ ! -f ${ENHANCD_DIR}/enhancd.log ]]; then
+if [[ ! -f ${ENHANCD_DIR}/enhancd.log && ! ${ENHANCD_HISTORY_ZOXIDE_BACKEND} ]]; then
   touch "${ENHANCD_DIR}/enhancd.log"
 fi
 
